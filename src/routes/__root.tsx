@@ -111,6 +111,10 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  if (typeof document !== "undefined") {
+    document.documentElement.classList.add("dark");
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
