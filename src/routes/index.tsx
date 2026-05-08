@@ -3,7 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
-import { Plus, Sparkles, Loader2 } from "lucide-react";
+import { Plus, Sparkles, Loader2, AlertTriangle, ShieldCheck } from "lucide-react";
 import { CATEGORIES, categoryEmoji, formatINR, monthRange } from "@/lib/format";
 import { getAiSuggestion } from "@/lib/ai.functions";
 
