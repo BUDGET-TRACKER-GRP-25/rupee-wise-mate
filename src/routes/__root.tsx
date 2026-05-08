@@ -112,7 +112,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   if (typeof document !== "undefined") {
-    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("dark");
   }
 
   return (
