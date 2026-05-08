@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Plus, Receipt, PieChart } from "lucide-react";
+import { Home, Plus, Receipt, PieChart, Trophy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -7,6 +7,7 @@ const tabs = [
   { to: "/add", label: "Add", icon: Plus },
   { to: "/history", label: "History", icon: Receipt },
   { to: "/insights", label: "Insights", icon: PieChart },
+  { to: "/achievements", label: "Wins", icon: Trophy },
 ] as const;
 
 export function BottomNav() {
