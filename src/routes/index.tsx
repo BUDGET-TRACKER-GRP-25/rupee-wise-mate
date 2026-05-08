@@ -102,15 +102,18 @@ function HomePage() {
 
   const budget = Number(settings.monthly_budget);
   const remaining = Math.max(budget - totalSpent, 0);
+  const overspent = totalSpent > budget;
+  const overBy = Math.max(totalSpent - budget, 0);
   const pct = budget > 0 ? Math.min((totalSpent / budget) * 100, 100) : 0;
   const remainingPct = 100 - pct;
 
   let ringColor = "var(--color-primary)";
-  if (pct >= 80) ringColor = "var(--color-coral)";
+  if (overspent || pct >= 80) ringColor = "var(--color-coral)";
   else if (pct >= 50) ringColor = "var(--color-warn)";
 
   let badge = { emoji: "😊", text: "On Track", cls: "bg-primary-soft text-primary" };
-  if (remainingPct < 20) badge = { emoji: "😬", text: "Overspending", cls: "bg-coral-soft text-coral" };
+  if (overspent) badge = { emoji: "🚨", text: "Budget Exceeded", cls: "bg-coral text-coral-foreground" };
+  else if (remainingPct < 20) badge = { emoji: "😬", text: "Overspending", cls: "bg-coral-soft text-coral" };
   else if (remainingPct < 50) badge = { emoji: "😐", text: "Watch Out", cls: "bg-[oklch(0.96_0.06_85)] text-[oklch(0.45_0.15_70)]" };
 
   return (
