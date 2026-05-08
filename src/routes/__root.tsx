@@ -96,7 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
@@ -112,7 +112,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   if (typeof document !== "undefined") {
-    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("dark");
   }
 
   return (

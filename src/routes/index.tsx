@@ -104,15 +104,17 @@ function HomePage() {
   const remaining = Math.max(budget - totalSpent, 0);
   const overspent = totalSpent > budget;
   const overBy = Math.max(totalSpent - budget, 0);
+  const lowBalance = !overspent && remaining <= 100;
   const pct = budget > 0 ? Math.min((totalSpent / budget) * 100, 100) : 0;
   const remainingPct = 100 - pct;
 
   let ringColor = "var(--color-primary)";
-  if (overspent || pct >= 80) ringColor = "var(--color-coral)";
+  if (overspent || lowBalance || pct >= 80) ringColor = "var(--color-coral)";
   else if (pct >= 50) ringColor = "var(--color-warn)";
 
   let badge = { emoji: "😊", text: "On Track", cls: "bg-primary-soft text-primary" };
   if (overspent) badge = { emoji: "🚨", text: "Budget Exceeded", cls: "bg-coral text-coral-foreground" };
+  else if (lowBalance) badge = { emoji: "⚠️", text: "Almost Out", cls: "bg-coral text-coral-foreground" };
   else if (remainingPct < 20) badge = { emoji: "😬", text: "Overspending", cls: "bg-coral-soft text-coral" };
   else if (remainingPct < 50) badge = { emoji: "😐", text: "Watch Out", cls: "bg-[oklch(0.96_0.06_85)] text-[oklch(0.45_0.15_70)]" };
 
@@ -139,7 +141,7 @@ function HomePage() {
       </div>
 
       {/* Status alert */}
-      {overspent ? (
+      {overspent || lowBalance ? (
         <div
           role="alert"
           className="mx-5 mt-5 flex items-start gap-3 rounded-3xl border-2 border-coral bg-coral-soft p-4 animate-in fade-in slide-in-from-top-2"
@@ -148,9 +150,15 @@ function HomePage() {
             <AlertTriangle className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-sm font-bold text-coral">Red Alert — Budget exceeded!</p>
+            <p className="text-sm font-bold text-coral">
+              {overspent ? "Red Alert — Budget exceeded!" : "Red Alert — Almost out of budget!"}
+            </p>
             <p className="mt-0.5 text-xs leading-relaxed text-foreground/80">
-              You're over by <span className="num-xl font-bold">{formatINR(overBy)}</span>. Time to hit pause on non-essentials. 🛑
+              {overspent ? (
+                <>You're over by <span className="num-xl font-bold">{formatINR(overBy)}</span>. Time to hit pause on non-essentials. 🛑</>
+              ) : (
+                <>Only <span className="num-xl font-bold">{formatINR(remaining)}</span> left this month. Slow down on spending! 🛑</>
+              )}
             </p>
           </div>
         </div>
