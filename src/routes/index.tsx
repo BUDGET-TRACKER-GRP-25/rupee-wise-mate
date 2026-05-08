@@ -141,7 +141,7 @@ function HomePage() {
       </div>
 
       {/* Status alert */}
-      {overspent ? (
+      {overspent || lowBalance ? (
         <div
           role="alert"
           className="mx-5 mt-5 flex items-start gap-3 rounded-3xl border-2 border-coral bg-coral-soft p-4 animate-in fade-in slide-in-from-top-2"
@@ -150,9 +150,15 @@ function HomePage() {
             <AlertTriangle className="h-4 w-4" />
           </div>
           <div>
-            <p className="text-sm font-bold text-coral">Red Alert — Budget exceeded!</p>
+            <p className="text-sm font-bold text-coral">
+              {overspent ? "Red Alert — Budget exceeded!" : "Red Alert — Almost out of budget!"}
+            </p>
             <p className="mt-0.5 text-xs leading-relaxed text-foreground/80">
-              You're over by <span className="num-xl font-bold">{formatINR(overBy)}</span>. Time to hit pause on non-essentials. 🛑
+              {overspent ? (
+                <>You're over by <span className="num-xl font-bold">{formatINR(overBy)}</span>. Time to hit pause on non-essentials. 🛑</>
+              ) : (
+                <>Only <span className="num-xl font-bold">{formatINR(remaining)}</span> left this month. Slow down on spending! 🛑</>
+              )}
             </p>
           </div>
         </div>
