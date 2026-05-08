@@ -138,6 +138,36 @@ function HomePage() {
         </span>
       </div>
 
+      {/* Status alert */}
+      {overspent ? (
+        <div
+          role="alert"
+          className="mx-5 mt-5 flex items-start gap-3 rounded-3xl border-2 border-coral bg-coral-soft p-4 animate-in fade-in slide-in-from-top-2"
+        >
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-coral text-coral-foreground">
+            <AlertTriangle className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-coral">Red Alert — Budget exceeded!</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-foreground/80">
+              You're over by <span className="num-xl font-bold">{formatINR(overBy)}</span>. Time to hit pause on non-essentials. 🛑
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="mx-5 mt-5 flex items-start gap-3 rounded-3xl bg-primary-soft p-4">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <ShieldCheck className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-primary">Safe Zone ✅</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-foreground/80">
+              You still have <span className="num-xl font-bold">{formatINR(remaining)}</span> left this month. Keep it up!
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* AI Insight */}
       <div className="mx-5 mt-6 rounded-3xl bg-primary-soft p-5">
         <div className="flex items-start gap-3">
