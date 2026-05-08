@@ -3,7 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
-import { Plus, Sparkles, Loader2 } from "lucide-react";
+import { Plus, Sparkles, Loader2, AlertTriangle, ShieldCheck } from "lucide-react";
 import { CATEGORIES, categoryEmoji, formatINR, monthRange } from "@/lib/format";
 import { getAiSuggestion } from "@/lib/ai.functions";
 
@@ -102,15 +102,18 @@ function HomePage() {
 
   const budget = Number(settings.monthly_budget);
   const remaining = Math.max(budget - totalSpent, 0);
+  const overspent = totalSpent > budget;
+  const overBy = Math.max(totalSpent - budget, 0);
   const pct = budget > 0 ? Math.min((totalSpent / budget) * 100, 100) : 0;
   const remainingPct = 100 - pct;
 
   let ringColor = "var(--color-primary)";
-  if (pct >= 80) ringColor = "var(--color-coral)";
+  if (overspent || pct >= 80) ringColor = "var(--color-coral)";
   else if (pct >= 50) ringColor = "var(--color-warn)";
 
   let badge = { emoji: "😊", text: "On Track", cls: "bg-primary-soft text-primary" };
-  if (remainingPct < 20) badge = { emoji: "😬", text: "Overspending", cls: "bg-coral-soft text-coral" };
+  if (overspent) badge = { emoji: "🚨", text: "Budget Exceeded", cls: "bg-coral text-coral-foreground" };
+  else if (remainingPct < 20) badge = { emoji: "😬", text: "Overspending", cls: "bg-coral-soft text-coral" };
   else if (remainingPct < 50) badge = { emoji: "😐", text: "Watch Out", cls: "bg-[oklch(0.96_0.06_85)] text-[oklch(0.45_0.15_70)]" };
 
   return (
@@ -134,6 +137,36 @@ function HomePage() {
           <span>{badge.emoji}</span> {badge.text}
         </span>
       </div>
+
+      {/* Status alert */}
+      {overspent ? (
+        <div
+          role="alert"
+          className="mx-5 mt-5 flex items-start gap-3 rounded-3xl border-2 border-coral bg-coral-soft p-4 animate-in fade-in slide-in-from-top-2"
+        >
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-coral text-coral-foreground">
+            <AlertTriangle className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-coral">Red Alert — Budget exceeded!</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-foreground/80">
+              You're over by <span className="num-xl font-bold">{formatINR(overBy)}</span>. Time to hit pause on non-essentials. 🛑
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="mx-5 mt-5 flex items-start gap-3 rounded-3xl bg-primary-soft p-4">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <ShieldCheck className="h-4 w-4" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-primary">Safe Zone ✅</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-foreground/80">
+              You still have <span className="num-xl font-bold">{formatINR(remaining)}</span> left this month. Keep it up!
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* AI Insight */}
       <div className="mx-5 mt-6 rounded-3xl bg-primary-soft p-5">
