@@ -77,9 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "SpendSmart — Friendly budget tracker" },
       { name: "description", content: "Track daily expenses, stay on budget, and get AI-powered spending insights. Built for students and young earners in India." },
       { property: "og:title", content: "SpendSmart — Friendly budget tracker" },
-      { property: "og:description", content: "Track daily expenses, stay on budget, and get AI-powered spending insights." },
+      { property: "og:description", content: "Track daily expenses, stay on budget, and get AI-powered spending insights. Built for students and young earners in India." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "SpendSmart — Friendly budget tracker" },
+      { name: "twitter:description", content: "Track daily expenses, stay on budget, and get AI-powered spending insights. Built for students and young earners in India." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/929f4ab7-da6c-4664-a42b-63c154c4bd00" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/929f4ab7-da6c-4664-a42b-63c154c4bd00" },
     ],
     links: [
       {
