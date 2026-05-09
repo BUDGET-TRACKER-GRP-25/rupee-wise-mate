@@ -5,7 +5,7 @@
 ---
 
 ## 🚀 Live App
-👉 [Click here to open SpendSmart](#) *(paste your Lovable published link here)*
+👉  https://github.com/BUDGET-TRACKER-GRP-25/rupee-wise-mate.git
 
 ---
 
