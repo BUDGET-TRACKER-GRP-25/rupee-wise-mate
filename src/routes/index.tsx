@@ -53,7 +53,7 @@ function HomePage() {
         .order("created_at", { ascending: false });
       setExpenses((e ?? []) as Expense[]);
     })();
-  }, [navigate]);
+  }, [navigate, authLoading, user]);
 
   const totalSpent = useMemo(
     () => (expenses ?? []).reduce((sum, x) => sum + Number(x.amount), 0),
