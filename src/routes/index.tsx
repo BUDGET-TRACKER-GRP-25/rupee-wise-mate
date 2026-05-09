@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/external-client";
+import { useSession } from "@/hooks/use-session";
 import { AppShell } from "@/components/AppShell";
 import { Plus, Sparkles, Loader2, AlertTriangle, ShieldCheck } from "lucide-react";
 import { CATEGORIES, categoryEmoji, formatINR, monthRange } from "@/lib/format";
@@ -22,6 +23,7 @@ type Expense = { id: string; amount: number; category: string; note: string | nu
 
 function HomePage() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useSession();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [expenses, setExpenses] = useState<Expense[] | null>(null);
   const [insight, setInsight] = useState<string | null>(null);
@@ -29,6 +31,7 @@ function HomePage() {
   const fetchAi = useServerFn(getAiSuggestion);
 
   useEffect(() => {
+    if (authLoading || !user) return;
     (async () => {
       const { data: s } = await supabase
         .from("user_settings")
