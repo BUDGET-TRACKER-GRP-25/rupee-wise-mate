@@ -27,6 +27,7 @@
 | GitHub Username | Role |
 |---|---|
 | amrinzikra-eng | Admin / Project Lead |
+|varghesemohan1@gmail.com
 | anugrahaman | Collaborator |
 | bhikpersonal-coder | Collaborator |
 | chahalgurkiran-gif | Collaborator |
