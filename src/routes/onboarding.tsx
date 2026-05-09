@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/external-client";
+import { useSession } from "@/hooks/use-session";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/onboarding")({
 
 function Onboarding() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useSession();
   const [income, setIncome] = useState("");
   const [budget, setBudget] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,12 +28,13 @@ function Onboarding() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (authLoading || !user) return;
     (async () => {
       const { data } = await supabase.from("user_settings").select("id").limit(1);
       if (data && data.length > 0) navigate({ to: "/" });
       else setChecking(false);
     })();
-  }, [navigate]);
+  }, [navigate, authLoading, user]);
 
   const valid = Number(income) > 0 && Number(budget) > 0 && Number(budget) <= Number(income);
 
@@ -40,11 +43,17 @@ function Onboarding() {
     if (!valid) return;
     setLoading(true);
     setError(null);
+    if (!user) {
+      setLoading(false);
+      navigate({ to: "/login" });
+      return;
+    }
     const { error } = await supabase.from("user_settings").insert({
+      user_id: user.id,
       monthly_income: Number(income),
       monthly_budget: Number(budget),
       currency: "INR",
-    });
+    } as never);
     setLoading(false);
     if (error) {
       setError("Something went wrong, try again");
@@ -53,7 +62,7 @@ function Onboarding() {
     navigate({ to: "/" });
   };
 
-  if (checking) {
+  if (authLoading || checking) {
     return (
       <AppShell hideNav>
         <div className="flex flex-1 items-center justify-center">

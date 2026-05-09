@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/external-client";
+import { useSession } from "@/hooks/use-session";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/add")({
 
 function AddExpense() {
   const navigate = useNavigate();
+  const { user } = useSession();
   const { id } = useSearch({ from: "/add" });
   const editing = Boolean(id);
 
@@ -55,10 +57,15 @@ function AddExpense() {
     e.preventDefault();
     if (!valid || loading) return;
     setLoading(true);
+    if (!user) {
+      setLoading(false);
+      navigate({ to: "/login" });
+      return;
+    }
     const payload = { amount: Number(amount), category, note: note.trim() || null, date };
     const { error } = editing && id
       ? await supabase.from("expenses").update(payload).eq("id", id)
-      : await supabase.from("expenses").insert(payload);
+      : await supabase.from("expenses").insert({ ...payload, user_id: user.id } as never);
     setLoading(false);
     if (error) {
       toast.error("Couldn't save expense — try again");

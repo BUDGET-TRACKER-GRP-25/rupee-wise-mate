@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/external-client";
+import { useSession } from "@/hooks/use-session";
 import { AppShell } from "@/components/AppShell";
 import {
   Drawer,
@@ -28,12 +29,14 @@ type Expense = { id: string; amount: number; category: string; note: string | nu
 
 function History() {
   const navigate = useNavigate();
+  const { user, loading: authLoading } = useSession();
   const [expenses, setExpenses] = useState<Expense[] | null>(null);
   const [monthOffset, setMonthOffset] = useState(0); // 0 = current
   const [selected, setSelected] = useState<Expense | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const load = async () => {
+    if (!user) return;
     const base = new Date();
     base.setDate(1);
     base.setMonth(base.getMonth() + monthOffset);
@@ -51,10 +54,11 @@ function History() {
   };
 
   useEffect(() => {
+    if (authLoading || !user) return;
     setExpenses(null);
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [monthOffset]);
+  }, [monthOffset, authLoading, user]);
 
   const monthLabel = useMemo(() => {
     const d = new Date();

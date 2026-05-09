@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/external-client";
+import { useSession } from "@/hooks/use-session";
 import { AppShell } from "@/components/AppShell";
 import { Loader2, Trophy, Sparkles, PartyPopper, Lock } from "lucide-react";
 import { formatINR } from "@/lib/format";
@@ -37,10 +38,12 @@ function tierFor(savedPct: number) {
 }
 
 function AchievementsPage() {
+  const { user, loading: authLoading } = useSession();
   const [settings, setSettings] = useState<Settings | null>(null);
   const [expenses, setExpenses] = useState<Expense[] | null>(null);
 
   useEffect(() => {
+    if (authLoading || !user) return;
     (async () => {
       const { data: s } = await supabase
         .from("user_settings")
@@ -51,7 +54,7 @@ function AchievementsPage() {
       const { data: e } = await supabase.from("expenses").select("amount,date");
       setExpenses((e ?? []) as Expense[]);
     })();
-  }, []);
+  }, [authLoading, user]);
 
   const months = useMemo<MonthStat[]>(() => {
     if (!settings || !expenses) return [];
