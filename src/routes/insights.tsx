@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import { supabase } from "@/integrations/supabase/external-client";
+import { useSession } from "@/hooks/use-session";
 import { AppShell } from "@/components/AppShell";
 import { categoryEmoji, formatINR, monthRange } from "@/lib/format";
 import { Bot, Loader2 } from "lucide-react";
@@ -32,6 +33,7 @@ type Expense = { id: string; amount: number; category: string };
 type Settings = { id: string; monthly_budget: number };
 
 function Insights() {
+  const { user, loading: authLoading } = useSession();
   const [expenses, setExpenses] = useState<Expense[] | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [tip, setTip] = useState<string | null>(null);
@@ -39,6 +41,7 @@ function Insights() {
   const fetchAi = useServerFn(getAiSuggestion);
 
   useEffect(() => {
+    if (authLoading || !user) return;
     (async () => {
       const { start, end } = monthRange();
       const [{ data: e }, { data: s }] = await Promise.all([
@@ -48,7 +51,7 @@ function Insights() {
       setExpenses((e ?? []) as Expense[]);
       setSettings((s?.[0] ?? null) as Settings | null);
     })();
-  }, []);
+  }, [authLoading, user]);
 
   const breakdown = useMemo(() => {
     const map: Record<string, number> = {};
