@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/external-client";
 import { AppShell } from "@/components/AppShell";
 import { categoryEmoji, formatINR, monthRange } from "@/lib/format";
 import { Bot, Loader2 } from "lucide-react";

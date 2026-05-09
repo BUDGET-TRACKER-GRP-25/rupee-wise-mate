@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/external-client";
 import { AppShell } from "@/components/AppShell";
 import { Loader2, Trophy, Sparkles, PartyPopper, Lock } from "lucide-react";
 import { formatINR } from "@/lib/format";
