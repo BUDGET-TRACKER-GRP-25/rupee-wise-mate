@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as AddRouteImport } from './routes/add'
@@ -19,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InsightsRoute = InsightsRouteImport.update({
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/add': typeof AddRoute
   '/history': typeof HistoryRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/add': typeof AddRoute
   '/history': typeof HistoryRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/add': typeof AddRoute
   '/history': typeof HistoryRoute
   '/insights': typeof InsightsRoute
+  '/login': typeof LoginRoute
   '/onboarding': typeof OnboardingRoute
 }
 export interface FileRouteTypes {
@@ -80,9 +89,17 @@ export interface FileRouteTypes {
     | '/add'
     | '/history'
     | '/insights'
+    | '/login'
     | '/onboarding'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/achievements' | '/add' | '/history' | '/insights' | '/onboarding'
+  to:
+    | '/'
+    | '/achievements'
+    | '/add'
+    | '/history'
+    | '/insights'
+    | '/login'
+    | '/onboarding'
   id:
     | '__root__'
     | '/'
@@ -90,6 +107,7 @@ export interface FileRouteTypes {
     | '/add'
     | '/history'
     | '/insights'
+    | '/login'
     | '/onboarding'
   fileRoutesById: FileRoutesById
 }
@@ -99,6 +117,7 @@ export interface RootRouteChildren {
   AddRoute: typeof AddRoute
   HistoryRoute: typeof HistoryRoute
   InsightsRoute: typeof InsightsRoute
+  LoginRoute: typeof LoginRoute
   OnboardingRoute: typeof OnboardingRoute
 }
 
@@ -109,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/insights': {
@@ -155,8 +181,19 @@ const rootRouteChildren: RootRouteChildren = {
   AddRoute: AddRoute,
   HistoryRoute: HistoryRoute,
   InsightsRoute: InsightsRoute,
+  LoginRoute: LoginRoute,
   OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
