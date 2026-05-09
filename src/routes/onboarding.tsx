@@ -62,7 +62,7 @@ function Onboarding() {
     navigate({ to: "/" });
   };
 
-  if (checking) {
+  if (authLoading || checking) {
     return (
       <AppShell hideNav>
         <div className="flex flex-1 items-center justify-center">
