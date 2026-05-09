@@ -122,7 +122,7 @@ function HomePage() {
   else if (remainingPct < 50) badge = { emoji: "😐", text: "Watch Out", cls: "bg-[oklch(0.96_0.06_85)] text-[oklch(0.45_0.15_70)]" };
 
   return (
-    <AppShell>
+    <AppShell showLogout>
       <div className="px-5 pt-8">
         <p className="text-sm text-muted-foreground">Hey there 👋</p>
         <h1 className="text-xl font-bold">Here's your month so far</h1>
